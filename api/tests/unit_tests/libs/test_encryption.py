@@ -21,12 +21,12 @@ class TestDecodeField:
         result = FieldEncryption.decrypt_field(encoded)
         assert result == plaintext
 
-    def test_decode_non_base64_returns_none(self):
-        """Test that non-base64 input returns None."""
+    def test_decode_non_base64_returns_original(self):
+        """Test that non-base64 input returns the original plain text."""
         non_base64 = "plain-password-!@#"
         result = FieldEncryption.decrypt_field(non_base64)
-        # Should return None (decoding failed)
-        assert result is None
+        # Should return original text unchanged (frontend may send plain text)
+        assert result == non_base64
 
     def test_decode_unicode_text(self):
         """Test decoding Base64 encoded Unicode text."""
@@ -62,12 +62,12 @@ class TestDecodePassword:
         result = FieldEncryption.decrypt_password(encoded)
         assert result == password
 
-    def test_decode_password_invalid_returns_none(self):
-        """Test that invalid base64 passwords return None."""
+    def test_decode_password_invalid_returns_original(self):
+        """Test that invalid base64 passwords return the original plain text."""
         invalid = "PlainPassword!@#"
         result = FieldEncryption.decrypt_password(invalid)
-        # Should return None (decoding failed)
-        assert result is None
+        # Should return original text unchanged (frontend may send plain text)
+        assert result == invalid
 
 
 class TestDecodeVerificationCode:
@@ -81,12 +81,12 @@ class TestDecodeVerificationCode:
         result = FieldEncryption.decrypt_verification_code(encoded)
         assert result == code
 
-    def test_decode_code_invalid_returns_none(self):
-        """Test that invalid base64 codes return None."""
+    def test_decode_code_invalid_returns_original(self):
+        """Test that invalid base64 codes return the original plain text."""
         invalid = "123456"  # Plain 6-digit code, not base64
         result = FieldEncryption.decrypt_verification_code(invalid)
-        # Should return None (decoding failed)
-        assert result is None
+        # Should return original text unchanged (frontend may send plain text)
+        assert result == invalid
 
 
 class TestRoundTripEncodingDecoding:
