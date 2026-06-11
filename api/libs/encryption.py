@@ -36,8 +36,8 @@ class FieldEncryption:
             return decoded_text
 
         except Exception:
-            # Decoding failed - return None to trigger error in caller
-            return None
+            # Not valid base64 — treat as plain text (frontend may send unencoded)
+            return encoded_text
 
     @classmethod
     def decrypt_password(cls, encrypted_password: str) -> str | None:
