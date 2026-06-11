@@ -1,0 +1,29 @@
+name: SonarQube Analysis (ORX)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonar:
+    name: SonarQube Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: sonarsource/sonarqube-scan-action@713881670b6b3676cda39549040e2d88c70d582e  # master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=dify-orx
+            -Dsonar.projectName=dify-orx
+            -Dsonar.sources=api,web
+            -Dsonar.exclusions=**/__pycache__/**,**/*.pyc,**/node_modules/**,**/.next/**,**/tests/**,**/venv/**,**/.venv/**,**/docker/**
+            -Dsonar.python.version=3.12
